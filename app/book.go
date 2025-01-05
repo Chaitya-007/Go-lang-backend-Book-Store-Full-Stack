@@ -24,8 +24,11 @@ func InsertBook(book *model.Book, ctx context.Context) (string, error) {
 		return "", err
 	}
 
+	// # Convert Inserted ID from ObjectID to String
+	bookID := res.InsertedID.(primitive.ObjectID).Hex()
+
 	// # Create Success Message
-	successMsg := fmt.Sprintf("Inserted 1 book with ID: %v", res.InsertedID)
+	successMsg := fmt.Sprintf("Inserted 1 book with ID: %v", bookID)
 
 	// # Return Success Message
 	return successMsg, nil
@@ -75,6 +78,13 @@ func DeleteBook(bookID string, ctx context.Context) (string, error) {
 	// # Filter to Find Book by ID
 	filter := bson.M{"_id": id}
 
+	// # Check if Book Exists in MongoDB Collection
+	check := collection.FindOne(ctx, filter)
+	if check.Err() != nil {
+		err = errors.New("Book with ID: " + bookID + " not found")
+		return "", err
+	}
+
 	// # Delete Book from MongoDB Collection
 	res, err := collection.DeleteOne(ctx, filter)
 	if err != nil {
@@ -96,6 +106,13 @@ func DeleteBooks(ctx context.Context) (string, error) {
 
 	// # Filter to Delete All Books
 	filter := bson.D{{}}
+
+	// # Check if Books Exist in MongoDB Collection
+	check := collection.FindOne(ctx, filter)
+	if check.Err() != nil {
+		err := errors.New("No books found")
+		return "", err
+	}
 
 	// # Delete All Books from MongoDB Collection
 	res, err := collection.DeleteMany(ctx, filter)
