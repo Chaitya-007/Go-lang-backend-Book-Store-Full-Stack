@@ -157,8 +157,8 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// # Send Success Response
-	utils.SendSuccess(w, book)
+	// # Send Payload Response
+	utils.SendPayload(w, book)
 }
 
 // # Get All Books
@@ -175,6 +175,6 @@ func GetBooks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// # Send Success Response
-	utils.SendSuccess(w, books)
+	// # Send Payload Response
+	utils.SendPayload(w, books)
 }
