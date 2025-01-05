@@ -20,7 +20,7 @@ func InsertBook(book *model.Book, ctx context.Context) (string, error) {
 	// # Insert Book into MongoDB Collection
 	res, err := collection.InsertOne(ctx, *book)
 	if err != nil {
-		err = errors.New("error: failed to insert book" + "\n" + err.Error())
+		err = errors.New("error: failed to insert book" + " - " + err.Error())
 		return "", err
 	}
 
@@ -42,7 +42,7 @@ func UpdateBook(bookID string, updates *bson.M, ctx context.Context) (string, er
 	// # Convert Book ID from String to ObjectID
 	id, err := primitive.ObjectIDFromHex(bookID)
 	if err != nil {
-		err = errors.New("error: Invalid Book ID" + "\n" + err.Error())
+		err = errors.New("error: Invalid Book ID" + " - " + err.Error())
 		return "", err
 	}
 
@@ -52,7 +52,7 @@ func UpdateBook(bookID string, updates *bson.M, ctx context.Context) (string, er
 	// # Update Book in MongoDB Collection
 	res, err := collection.UpdateOne(ctx, filter, bson.M{"$set": updates})
 	if err != nil {
-		err = errors.New("error: failed to update book" + "\n" + err.Error())
+		err = errors.New("error: failed to update book" + " - " + err.Error())
 		return "", err
 	}
 
@@ -71,7 +71,7 @@ func DeleteBook(bookID string, ctx context.Context) (string, error) {
 	// # Convert Book ID from String to ObjectID
 	id, err := primitive.ObjectIDFromHex(bookID)
 	if err != nil {
-		err = errors.New("error: Invalid Book ID" + "\n" + err.Error())
+		err = errors.New("error: Invalid Book ID" + " - " + err.Error())
 		return "", err
 	}
 
@@ -88,7 +88,7 @@ func DeleteBook(bookID string, ctx context.Context) (string, error) {
 	// # Delete Book from MongoDB Collection
 	res, err := collection.DeleteOne(ctx, filter)
 	if err != nil {
-		err = errors.New("error: failed to delete book" + "\n" + err.Error())
+		err = errors.New("error: failed to delete book" + " - " + err.Error())
 		return "", err
 	}
 
@@ -110,14 +110,14 @@ func DeleteBooks(ctx context.Context) (string, error) {
 	// # Check if Books Exist in MongoDB Collection
 	check := collection.FindOne(ctx, filter)
 	if err := check.Err(); err != nil {
-		err = errors.New("error: no books found" + "\n" + err.Error())
+		err = errors.New("error: no books found" + " - " + err.Error())
 		return "", err
 	}
 
 	// # Delete All Books from MongoDB Collection
 	res, err := collection.DeleteMany(ctx, filter)
 	if err != nil {
-		err = errors.New("error: failed to delete books" + "\n" + err.Error())
+		err = errors.New("error: failed to delete books" + " - " + err.Error())
 		return "", err
 	}
 
@@ -137,7 +137,7 @@ func GetBook(bookID string, ctx context.Context) (*model.Book, error) {
 	// # Convert Book ID from String to ObjectID
 	id, err := primitive.ObjectIDFromHex(bookID)
 	if err != nil {
-		err = errors.New("error: Invalid Book ID: " + "\n" + err.Error())
+		err = errors.New("error: Invalid Book ID: " + " - " + err.Error())
 		return nil, err
 	}
 
@@ -150,7 +150,7 @@ func GetBook(bookID string, ctx context.Context) (*model.Book, error) {
 	// # Find Book from MongoDB Collection
 	err = collection.FindOne(ctx, filter).Decode(&book)
 	if err != nil {
-		err = errors.New("error: failed to get book with ID: " + bookID + "\n" + err.Error())
+		err = errors.New("error: failed to get book with ID: " + bookID + " - " + err.Error())
 		return nil, err
 	}
 
@@ -169,7 +169,7 @@ func GetBooks(ctx context.Context) (*[]model.Book, error) {
 	// # Find All Books from MongoDB Collection
 	cur, err := collection.Find(ctx, filter)
 	if err != nil {
-		err = errors.New("error: failed to get books: " + "\n" + err.Error())
+		err = errors.New("error: failed to get books: " + " - " + err.Error())
 		return nil, err
 	}
 
@@ -184,7 +184,7 @@ func GetBooks(ctx context.Context) (*[]model.Book, error) {
 		// # Decode Book
 		err := cur.Decode(&book)
 		if err != nil {
-			err = errors.New("error: failed to decode book" + "\n" + err.Error())
+			err = errors.New("error: failed to decode book" + " - " + err.Error())
 			return nil, err
 		}
 
@@ -198,7 +198,7 @@ func GetBooks(ctx context.Context) (*[]model.Book, error) {
 	// # Check if Books Slice is Empty
 	if books == nil {
 		err = errors.New("mongo: no documents in result")
-		err = errors.New("error: no books found" + "\n" + err.Error())
+		err = errors.New("error: no books found" + " - " + err.Error())
 		return nil, err
 	}
 
