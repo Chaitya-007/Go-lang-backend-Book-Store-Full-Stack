@@ -3,10 +3,10 @@ package api
 import (
 	"bookstore/app"
 	"bookstore/model"
+	"bookstore/utils"
 	"context"
 	"encoding/json"
 	"net/http"
-	"time"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
@@ -32,11 +32,15 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// # Get Current Time
-	now := time.Now()
+	time, err := utils.GetCurrentTime()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	// # Set CreatedAt and UpdatedAt Time
-	book.CreatedAt = &now
-	book.UpdatedAt = &now
+	book.CreatedAt = time
+	book.UpdatedAt = time
 
 	// # Insert Book into Database
 	res, err := app.InsertBook(&book, context.Background())
@@ -75,10 +79,14 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// # Get Current Time
-	now := time.Now()
+	time, err := utils.GetCurrentTime()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	// # Set UpdatedAt Time
-	updates["updatedAt"] = &now
+	updates["updatedAt"] = time
 
 	// # Update Book in Database
 	res, err := app.UpdateBook(params["id"], &updates, context.Background())
