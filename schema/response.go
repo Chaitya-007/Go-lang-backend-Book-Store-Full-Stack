@@ -6,6 +6,12 @@ type Success struct {
 	Message interface{} `json:"message"`
 }
 
+// # Payload Response Schema
+type Payload struct {
+	Success bool        `json:"success"` // # true
+	Payload interface{} `json:"payload"`
+}
+
 // # Error Response Schema
 type Error struct {
 	Success bool        `json:"success"` // # false
