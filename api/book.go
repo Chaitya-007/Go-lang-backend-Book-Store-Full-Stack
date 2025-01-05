@@ -27,14 +27,15 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	// # Decode Request Body to Book Object
 	err := decoder.Decode(&book)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		utils.SendError(w, err)
 		return
 	}
 
 	// # Get Current Time
 	time, err := utils.GetCurrentTime()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		// # Send Error Response
+		utils.SendError(w, err)
 		return
 	}
 
@@ -45,15 +46,13 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	// # Insert Book into Database
 	res, err := app.InsertBook(&book, context.Background())
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		// # Send Error Response
+		utils.SendError(w, err)
 		return
 	}
 
-	// # Create New Encoder for Response Body
-	encoder := json.NewEncoder(w)
-
-	// # Encode Response to Writer
-	encoder.Encode(res)
+	// # Send Success Response
+	utils.SendSuccess(w, res)
 }
 
 // # Update Book
@@ -74,14 +73,16 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	// # Decode Request Body to Updates Object
 	err := decoder.Decode(&updates)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		// # Send Error Response
+		utils.SendError(w, err)
 		return
 	}
 
 	// # Get Current Time
 	time, err := utils.GetCurrentTime()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		// # Send Error Response
+		utils.SendError(w, err)
 		return
 	}
 
@@ -91,15 +92,13 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	// # Update Book in Database
 	res, err := app.UpdateBook(params["id"], &updates, context.Background())
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		// # Send Error Response
+		utils.SendError(w, err)
 		return
 	}
 
-	// # Create New Encoder for Response Body
-	encoder := json.NewEncoder(w)
-
-	// # Encode Response to Writer
-	encoder.Encode(res)
+	// # Send Success Response
+	utils.SendSuccess(w, res)
 }
 
 // # Delete Book
@@ -114,15 +113,13 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	// # Delete Book from Database
 	res, err := app.DeleteBook(params["id"], context.Background())
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		// # Send Error Response
+		utils.SendError(w, err)
 		return
 	}
 
-	// # Create New Encoder for Response Body
-	encoder := json.NewEncoder(w)
-
-	// # Encode Response to Writer
-	encoder.Encode(res)
+	// # Send Success Response
+	utils.SendSuccess(w, res)
 }
 
 // # Delete All Books
@@ -134,15 +131,13 @@ func DeleteBooks(w http.ResponseWriter, r *http.Request) {
 	// # Delete All Books from Database
 	res, err := app.DeleteBooks(context.Background())
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		// # Send Error Response
+		utils.SendError(w, err)
 		return
 	}
 
-	// # Create New Encoder for Response Body
-	encoder := json.NewEncoder(w)
-
-	// # Encode Response to Writer
-	encoder.Encode(res)
+	// # Send Success Response
+	utils.SendSuccess(w, res)
 }
 
 // # Get Book
@@ -157,15 +152,13 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
 	// # Get Book from Database
 	book, err := app.GetBook(params["id"], context.Background())
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		// # Send Error Response
+		utils.SendError(w, err)
 		return
 	}
 
-	// # Create New Encoder for Response Body
-	encoder := json.NewEncoder(w)
-
-	// # Encode Response to Writer
-	encoder.Encode(book)
+	// # Send Success Response
+	utils.SendSuccess(w, book)
 }
 
 // # Get All Books
@@ -177,13 +170,11 @@ func GetBooks(w http.ResponseWriter, r *http.Request) {
 	// # Get All Books from Database
 	books, err := app.GetBooks(context.Background())
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		// # Send Error Response
+		utils.SendError(w, err)
 		return
 	}
 
-	// # Create New Encoder for Response Body
-	encoder := json.NewEncoder(w)
-
-	// # Encode Response to Writer
-	encoder.Encode(books)
+	// # Send Success Response
+	utils.SendSuccess(w, books)
 }
