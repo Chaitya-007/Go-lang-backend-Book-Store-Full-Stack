@@ -109,8 +109,8 @@ func DeleteBooks(ctx context.Context) (string, error) {
 
 	// # Check if Books Exist in MongoDB Collection
 	check := collection.FindOne(ctx, filter)
-	if check.Err() != nil {
-		err := errors.New("No books found")
+	if err := check.Err(); err != nil {
+		err = errors.New("No books found: " + err.Error())
 		return "", err
 	}
 
@@ -150,7 +150,7 @@ func GetBook(bookID string, ctx context.Context) (*model.Book, error) {
 	// # Find Book from MongoDB Collection
 	err = collection.FindOne(ctx, filter).Decode(&book)
 	if err != nil {
-		err = errors.New("Failed to get book with ID: " + bookID + " " + err.Error())
+		err = errors.New("Failed to get book with ID: " + bookID + " : " + err.Error())
 		return nil, err
 	}
 
@@ -194,6 +194,13 @@ func GetBooks(ctx context.Context) (*[]model.Book, error) {
 
 	// # Close Cursor
 	defer cur.Close(ctx)
+
+	// # Check if Books Slice is Empty
+	if books == nil {
+		err = errors.New("mongo: no documents in collection")
+		err = errors.New("No books found: " + err.Error())
+		return nil, err
+	}
 
 	// # Return Books Slice
 	return &books, nil
