@@ -16,7 +16,7 @@ func GetCurrentTime() (*time.Time, error) {
 	// # Get Timezone Location
 	ISTLocation, err := time.LoadLocation(timeZone)
 	if err != nil {
-		err = errors.New("Unable to Load Location: " + err.Error())
+		err = errors.New("Unable to load location: " + err.Error())
 		return nil, err
 	}
 
